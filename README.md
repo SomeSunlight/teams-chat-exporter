@@ -1,80 +1,186 @@
 # Microsoft Teams Chat Exporter
 
-A Python script to export long Microsoft Teams chat histories as a single, searchable HTML file.
+A Python script to export long Microsoft Teams chat histories as a single, self-contained, and searchable HTML file.
 
 ## The Problem
 
-Microsoft Teams does not offer a user-friendly way to export an entire chat history. Standard "save page" tools fail because Teams uses "infinite scroll" and virtualization to load messages, meaning only a small fraction of the chat is ever present in the browser's memory at one time. Furthermore, the web application is heavily secured against in-browser automation, making traditional scraping scripts fail.
+Microsoft Teams does not offer a user-friendly way to export an entire chat history. Standard "save page" tools fail because Teams uses advanced techniques like "infinite scroll" and UI virtualization to load messages, meaning only a small fraction of the chat is ever visible to simple scrapers.
 
 ## The Solution
 
-This project uses the **Playwright** browser automation framework to solve the problem reliably. It works by:
+This project uses the **Playwright** browser automation framework to reliably solve this problem. It intelligently mimics user behavior to ensure every message is captured.
 
-1.  **Persistent, Secure Login:** The script uses a dedicated browser context. You only need to log in manually once. Your credentials are never stored in the code.
-2.  **Intelligent Session Handling:** If your session expires (e.g., after a week), the script will detect this, pause, and wait for you to log in again before continuing.
-3.  **Human-Like Scrolling:** It automates the process of scrolling to the top of the chat to trigger the loading of all messages.
-4.  **Live Message Collection:** It actively collects every unique message as it appears during the scroll process, defeating the app's virtualization.
-5.  **HTML Export:** It finally assembles all collected messages into a clean, searchable HTML file.
+### Key Features ✨
+
+- **Complete History Export:** Automatically scrolls to the beginning of a chat, loading all messages along the way.
+    
+- **Self-Contained Archives:** Downloads all images, avatars, and captures reactions as screenshots, creating a portable HTML file that works perfectly offline.
+    
+- **User-Friendly:** Launches its own browser and provides a simple in-page button to start the export. No need to handle complex URLs.
+    
+- **Secure & Persistent Login:** You only need to log in to Teams once. The script securely saves your session for future runs without ever storing your password in the code.
+    
+- **Smart & Maintainable:** Uses a modular configuration system, allowing the community to easily update the script when Microsoft changes the Teams UI.
+    
+
+## 🔒 Privacy & Data Protection
+
+**Important:** This tool exports sensitive, personal conversations containing private data.
+
+- **Output Location:** By default, chats are saved in the `saved_chats` folder within the project directory.
+    
+- **Custom Location:** It is strongly recommended to use the `--outdir` option to save exports directly to a secure, encrypted location (e.g., BitLocker drive, Veracrypt container) suitable for personal data.
+    
+- **Responsibility:** You are responsible for safeguarding the exported data in compliance with your local data privacy laws (e.g., GDPR).
+    
 
 ## Prerequisites
 
-* Python 3.8+
-* pip (Python package installer)
+- **Python 3.12** is highly recommended for the best performance.
+    
+- The **minimum required version is Python 3.8**.
+    
+- An installed Chromium-based browser (Google Chrome, Microsoft Edge).
+    
 
 ## Setup Instructions
 
-1.  **Clone the repository:**
-    ```bash
+1. **Clone the Repository:**
+    
+    ```
     git clone <your-repo-url>
     cd teams-chat-exporter
     ```
-
-2.  **Create a virtual environment:** (Recommended)
-    ```bash
-    python -m venv venv
+    
+2. **Create and Activate a Virtual Environment:**
+    
+    - **Windows (Command Prompt):**
+        
+        ```
+        python -m venv .venv
+        .\.venv\Scripts\activate
+        ```
+        
+    - **macOS / Linux (Bash):**
+        
+        ```
+        python3 -m venv .venv
+        source .venv/bin/activate
+        ```
+        
+3. **Install Dependencies:**
+    
     ```
-    Activate it:
-    * Windows: `.\venv\Scripts\activate`
-    * macOS/Linux: `source venv/bin/activate`
-
-3.  **Install dependencies:**
-    ```bash
     pip install -r requirements.txt
     ```
-
-4.  **Install Playwright browsers:** (This is a one-time setup)
-    ```bash
+    
+4. **Install Playwright Browsers:** This is a one-time setup that downloads the browser binaries controlled by Playwright.
+    
+    ```
     playwright install
     ```
-
-## Configuration
-
-Before running, you must configure the script. Open the `src/main.py` file and edit the following constant:
-
-* `TEAMS_CHAT_URL`: **This is mandatory.** Paste the full URL of the Teams chat you want to export. It will look something like `https://teams.microsoft.com/_#/conversations/19:xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@thread.v2?ctx=chat`.
+    
 
 ## Usage
 
-1.  **Run the script from the project root:**
-    ```bash
-    python src/main.py
-    ```
+### Basic Usage
 
-2.  **First-Time Run:**
-    * A Chromium browser window will open.
-    * The script will detect that you are not logged in and will print a message in the console asking you to do so.
-    * Log in to Microsoft Teams as you normally would (including any two-factor authentication).
-    * Once you are successfully logged in and the script detects the chat, it will automatically proceed.
+Run the script to start the interactive browser:
 
-3.  **Subsequent Runs:**
-    * The script will start, open the browser, and you will already be logged in. The process will be fully automatic.
+```
+python src/main.py
+```
 
-4.  **The Process:**
-    * The script will navigate to your chat and begin scrolling up, printing its progress in the console. This may take several minutes for very long chats.
-    * Once it reaches the beginning of the chat, it will build the HTML file.
+### Command Line Options
 
-5.  **Output:**
-    * A file named `chat_export.html` will be created in the project's root directory.
+| 
+Option
+
+ | 
+
+Description
+
+ |
+| --- | --- |
+| 
+
+`--outdir <path>`
+
+ | 
+
+Specify a custom directory to save exported chats (Recommended for privacy).
+
+ |
+| 
+
+`--debug`
+
+ | 
+
+Enable verbose logging from the browser console for troubleshooting.
+
+ |
+| 
+
+`--help`
+
+ | 
+
+Show the help message and exit.
+
+ |
+
+**Example:**
+
+```
+python src/main.py --outdir "D:\Secure_Backups\Teams" --debug
+```
+
+### Workflow
+
+1. **Login (First-Time Use Only):**
+    
+    - A new browser window will open, controlled by the script.
+        
+    - The script will ask you to log in to Microsoft Teams. Please do so as you normally would.
+        
+    - The script will remember your session for all future runs.
+        
+2. **Export a Chat:**
+    
+    - In the browser window opened by the script, **navigate to the chat** you want to export.
+        
+    - Within a few seconds, a blue **"Export This Chat"** button will appear at the top-right of the page.
+        
+    - **Click this button.**
+        
+    - The script will take over, begin scrolling, and print its progress in the terminal. This may take several minutes for very long chats.
+        
+3. **Output:**
+    
+    - When finished, a new folder containing the `index.html` file and an `images` subfolder will be created in your specified output directory.
+        
+    - You can then navigate to another chat in the same browser window, and a new export button will appear, ready for the next export.
+        
+
+## ⚠️ A Note on Maintenance
+
+Microsoft will eventually update the Teams UI, which will cause the script to fail. This project is designed to be easily updated by the community.
+
+When the script fails, it's almost always because the CSS selectors have changed. You can fix this by updating the relevant `.ini` file in the `config/` directory.
+
+**How to Find New Selectors:**
+
+1. Open Teams in your regular browser and open the Developer Tools (`F12`).
+    
+2. Use the "Inspect Element" tool (usually an icon with a mouse pointer in a square).
+    
+3. Click on the element you need to identify (e.g., the main chat scroll area, a message, a user's name).
+    
+4. Look for stable attributes in the highlighted HTML, like `data-tid="..."` or `data-testid="..."`.
+    
+5. Copy this selector, open the latest `.ini` file in the `config` folder, and update the corresponding value. If you create a new file, name it with the current date (e.g., `teams_YYYY-MM-DD.ini`).
+    
 
 ## License
 

@@ -1,8 +1,6 @@
 # Python cache
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
 
 # Virtual environment
 venv/
@@ -15,7 +13,6 @@ env/
 .vscode/
 
 # --- IMPORTANT ---
-# Exclude the Playwright user data directory
-# This contains sensitive session cookies and login data.
-# NEVER commit this folder to Git.
+# Exclude sensitive user data
 playwright_user_data/
+saved_chats/
