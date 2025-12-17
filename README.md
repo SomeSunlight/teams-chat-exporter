@@ -93,42 +93,11 @@ python src/main.py
 
 ### Command Line Options
 
-| 
-Option
+**`--outdir <path>`** Specify a custom directory to save exported chats. This is **strongly recommended** for keeping sensitive data separate from the program code (e.g., saving directly to an encrypted drive).
 
- | 
+**`--debug`** Enable verbose logging from the browser console. Use this if the script is having trouble detecting chats or if you are developing new features.
 
-Description
-
- |
-| --- | --- |
-| 
-
-`--outdir <path>`
-
- | 
-
-Specify a custom directory to save exported chats (Recommended for privacy).
-
- |
-| 
-
-`--debug`
-
- | 
-
-Enable verbose logging from the browser console for troubleshooting.
-
- |
-| 
-
-`--help`
-
- | 
-
-Show the help message and exit.
-
- |
+**`--help`** Show the help message and exit.
 
 **Example:**
 
