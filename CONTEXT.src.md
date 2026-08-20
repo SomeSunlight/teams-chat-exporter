@@ -1,9 +1,9 @@
 # Teams Chat Exporter — Local Context Source
-<!-- ctx:node id="433a61e0-a960-412c-91f9-d95f9ad35af3" version="0.1.0-experiment" adapters="agents,goose" -->
+<!-- ctx:node id="433a61e0-a960-412c-91f9-d95f9ad35af3" version="0.1.0-experiment" adapters="agents,goose,copilot" -->
 
 > [!IMPORTANT]
 > This is the human-edited ContextCanon source for the experiment branch.
-> Generated `CONTEXT.md`, `CONTEXT/`, `.context/`, `AGENTS.md`, and `.goosehints` do not belong here yet: the first test is to let the compiler create them.
+> Generated `CONTEXT.md`, `CONTEXT/`, `.context/`, `AGENTS.md`, `.goosehints`, and `.github/copilot-instructions.md` do not belong here yet: the first test is to let the compiler create them.
 
 ## Rules
 
