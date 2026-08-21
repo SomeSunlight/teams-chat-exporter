@@ -75,7 +75,6 @@ CONTEXT/
 .context/context.yaml
 AGENTS.md
 .goosehints
-.github/copilot-instructions.md
 ```
 
 Do not edit these generated files as source. The human-editable truth remains `CONTEXT.src.md` plus its referenced project resources.
@@ -178,18 +177,20 @@ contextcanon check .
 The Node metadata in `CONTEXT.src.md` should include:
 
 ```text
-adapters="agents,goose,copilot"
+adapters="agents,goose"
 ```
 
-Confirm that this generated file now exists:
+For GitHub Copilot in JetBrains, ContextCanon deliberately uses the generated `AGENTS.md` rather than a second Copilot-specific instruction file.
+
+Verify in PyCharm under:
 
 ```text
-.github/copilot-instructions.md
+Tools → GitHub Copilot → Customizations
 ```
 
-GitHub Copilot Chat in JetBrains automatically uses this repository-wide instruction file. It is a thin generated adapter that points Copilot to `CONTEXT.md`; the project context itself remains harness-neutral.
+that **Use AGENTS.md file** is enabled. In the tested configuration, Copilot states that instructions from `AGENTS.md` are attached to all chat requests.
 
-When Copilot answers, inspect the response's **References** list. `.github/copilot-instructions.md` should appear there when JetBrains applied the repository instructions.
+`AGENTS.md` then points Copilot to the self-describing `CONTEXT.md`, which applies the Rules and Topic-loading semantics.
 
 ### Ordinary task
 
@@ -199,7 +200,7 @@ Ask something unrelated to Teams UI selectors, for example:
 
 Expected behavior:
 
-- Copilot enters through `.github/copilot-instructions.md` and reads `CONTEXT.md`.
+- Copilot enters through `AGENTS.md` and reads `CONTEXT.md`.
 - Both always-on Rules apply.
 - The selector-maintenance Topic does not match, so its Required selector resources should not be needed.
 
@@ -227,7 +228,7 @@ The experiment is successful only if it improves the real working experience. Pa
 - whether Topic resources appear only when relevant;
 - whether `CONTEXT/` is understandable rather than clutter;
 - whether `.context/` can remain safely ignorable during normal work;
-- whether the Copilot adapter reliably enters ContextCanon without duplicating project context;
+- whether Copilot reliably enters ContextCanon through `AGENTS.md` without duplicate harness files;
 - whether the LLM becomes more targeted without receiving unnecessary project material.
 
 Record confusing or unnecessary behavior rather than working around it. The point of this experiment is to let the real project shape the next ContextCanon iteration.
