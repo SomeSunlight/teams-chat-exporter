@@ -24,7 +24,7 @@ uv tool update-shell
 
 and open a new terminal.
 
-The compiler branch is changing during this experiment. To refresh the installed tool after that branch changes, run the same `uv tool install` command again. uv replaces the existing isolated tool installation.
+The compiler branch is changing during this experiment. To refresh the installed tool after that branch changes, run the same `uv tool install` command again. uv generally replaces the existing isolated tool installation; use `--force` if an explicit reinstall is needed.
 
 ## 2. Check out the experiment branch
 
@@ -152,11 +152,22 @@ git diff
 
 Confirm that the derived Official Context and machine-state digest change while `CONTEXT.src.md` remains the authored source.
 
+If this was only a temporary experiment, restore `CONTEXT.src.md` before synchronizing the branch for the next step.
+
 ## 9. First LLM comparison with GitHub Copilot in PyCharm
 
-### Refresh the compiler first
+### Refresh both moving parts first
 
-If ContextCanon was installed before Copilot adapter support was added, refresh the tool and rebuild:
+During this experiment, both the ContextCanon compiler branch and this example branch can change. Updating the compiler does **not** update this repository checkout.
+
+First synchronize the example branch. If step 8 left an intentional local edit in `CONTEXT.src.md`, restore or stash it before the fast-forward merge.
+
+```powershell
+git fetch origin
+git merge --ff-only origin/agent/contextcanon-hello-world
+```
+
+Then refresh the compiler and rebuild:
 
 ```powershell
 uv tool install "git+https://github.com/SomeSunlight/context-canon.git@agent/compiler-walking-skeleton"
@@ -164,7 +175,13 @@ contextcanon build .
 contextcanon check .
 ```
 
-Confirm that this file now exists:
+The Node metadata in `CONTEXT.src.md` should include:
+
+```text
+adapters="agents,goose,copilot"
+```
+
+Confirm that this generated file now exists:
 
 ```text
 .github/copilot-instructions.md
